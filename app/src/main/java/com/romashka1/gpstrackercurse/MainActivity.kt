@@ -2,8 +2,11 @@ package com.romashka1.gpstrackercurse
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
 import com.romashka1.gpstrackercurse.databinding.ActivityMainBinding
+import com.romashka1.gpstrackercurse.fragments.MainFragment
+import com.romashka1.gpstrackercurse.fragments.SettingsFragment
+import com.romashka1.gpstrackercurse.fragments.TracksFragment
+import com.romashka1.gpstrackercurse.utils.openFragment
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -13,14 +16,15 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         onButtonNavClicks()
+        openFragment(MainFragment.newInstance())
     }
 
     private fun onButtonNavClicks(){
         binding.bNav.setOnItemSelectedListener{
             when(it.itemId){
-                R.id.id_home -> Toast.makeText(this, "Home", Toast.LENGTH_SHORT).show()
-                R.id.id_tracks -> Toast.makeText(this, "Track", Toast.LENGTH_SHORT).show()
-                R.id.id_settings -> Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show()
+                R.id.id_home -> openFragment(MainFragment.newInstance())
+                R.id.id_tracks -> openFragment(TracksFragment.newInstance())
+                R.id.id_settings -> openFragment(SettingsFragment())
 
             }
             true
