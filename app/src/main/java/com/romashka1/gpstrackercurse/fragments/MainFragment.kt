@@ -2,6 +2,7 @@ package com.romashka1.gpstrackercurse.fragments
 
 import android.Manifest
 import android.content.Context
+import android.location.LocationManager
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,6 +14,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.romashka1.gpstrackercurse.databinding.FragmentMainBinding
+import com.romashka1.gpstrackercurse.utils.DialogManager
 import com.romashka1.gpstrackercurse.utils.checkPermission
 import com.romashka1.gpstrackercurse.utils.showToast
 import org.osmdroid.config.Configuration
@@ -86,6 +88,7 @@ class MainFragment : Fragment() {
             && checkPermission(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
         ) {
             initOSM()
+            checkLocationEnabled()
         } else {
             pLauncher.launch(
                 arrayOf(
@@ -98,17 +101,26 @@ class MainFragment : Fragment() {
     }
 
 
+
+
     private fun checkPermissionBefore10() {
-        if (checkPermission(Manifest.permission.ACCESS_FINE_LOCATION)
-            && checkPermission(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
-        ) {
+        if (checkPermission(Manifest.permission.ACCESS_FINE_LOCATION)) {
             initOSM()
+            checkLocationEnabled()
         } else {
-            pLauncher.launch(
-                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
-            )
+            pLauncher.launch(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION))
         }
 
+    }
+
+    private fun checkLocationEnabled(){
+        val lManager = activity?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        val isEnabled = lManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+        if(!isEnabled){
+            DialogManager.showLocEnableDialog(activity as AppCompatActivity)
+        } else {
+            showToast("Location enabled!")
+        }
     }
 
 
